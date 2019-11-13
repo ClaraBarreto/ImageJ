@@ -1,0 +1,42 @@
+path = getDirectory("Choose file");
+dir=getFileList(path);
+folder = File.getName(path);
+	for (i=0; i < dir.length; i++) {
+		if (endsWith(dir[i],"czi")) {
+		open(path+dir[i]);
+		name = getTitle();
+		series_name = replace(name, ".czi", "");
+		rename("IMAGE");
+		run("Stack to RGB");
+		run("Duplicate...", " ");
+		run("Duplicate...", " ");
+		run("Scale Bar...", "width=40 height=10 font=42 color=Black background=None location=[Lower Right] bold hide");
+		saveAs("tiff", path+File.separator+series_name+"_original.tiff");
+		close();
+		makeRectangle(1587, 357, 600, 600);
+		waitForUser;
+		run("Crop");
+		run("Scale Bar...", "width=40 height=10 font=42 color=Black background=None location=[Lower Right] bold hide");
+		saveAs("tiff", path+File.separator+series_name+"_Crop.tiff");
+		close();
+		selectWindow("IMAGE (RGB)");
+		run("Enhance Contrast", "saturated=0.35");
+		run("Colour Deconvolution", "vectors=[H DAB]");
+		selectWindow("IMAGE (RGB)-(Colour_3)");
+		close();
+		selectWindow("IMAGE (RGB)-(Colour_1)");
+		close();
+		selectWindow("IMAGE (RGB)-(Colour_2)");
+		run("Subtract Background...", "rolling=50 light");
+		saveAs("tiff", path+File.separator+series_name+"_DAB.tiff");
+		setThreshold(0, 110);
+		//setThreshold(0, 110);
+		run("Convert to Mask");
+		run("Measure");		
+		waitForUser;
+		run("Close All");
+		}
+	};
+selectWindow("Results");
+saveAs("Results", path+File.separator+folder+"_Results (110T).xls");
+run("Clear Results");
