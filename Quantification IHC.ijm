@@ -21,12 +21,12 @@ folder = File.getName(path);
 		selectWindow("IMAGE (RGB)-(Colour_1)");
 		close();
 		selectWindow("IMAGE (RGB)-(Colour_2)");
+		run("Duplicate...", " ");
 		saveAs("tiff", path+File.separator+series_name+"_DAB.tiff");
 		run("Subtract Background...", "rolling=200 light");
-		waitForUser;
 		setThreshold(0, 110);
-		run("Convert to Mask");
 		waitForUser;
+		run("Convert to Mask");
 		run("Measure");	
 		run("Create Selection");
 		run("Make Inverse");
@@ -59,16 +59,16 @@ folder = File.getName(path);
 		min[2]=235;
 		max[2]=255;
 		filter[2]="pass";
-		for (i=0;i<3;i++){
-		  selectWindow(""+i);
-		  setThreshold(min[i], max[i]);
+		for (k=0;k<3;k++){
+		  selectWindow(""+k);
+		  setThreshold(min[k], max[k]);
 		  run("Convert to Mask");
-		  if (filter[i]=="stop")  run("Invert");
+		  if (filter[k]=="stop")  run("Invert");
 		};
 		imageCalculator("AND create", "0","1");
 		imageCalculator("AND create", "Result of 0","2");
-		for (i=0;i<3;i++){
-		  selectWindow(""+i);
+		for (k=0;k<3;k++){
+		  selectWindow(""+k);
 		  close();
 		};
 		selectWindow("Result of 0");
@@ -107,16 +107,16 @@ folder = File.getName(path);
 		min[2]=0;
 		max[2]=44;
 		filter[2]="pass";
-		for (i=0;i<3;i++){
-		  selectWindow(""+i);
-		  setThreshold(min[i], max[i]);
+		for (k=0;k<3;k++){
+		  selectWindow(""+k);
+		  setThreshold(min[k], max[k]);
 		  run("Convert to Mask");
-		  if (filter[i]=="stop")  run("Invert");
+		  if (filter[k]=="stop")  run("Invert");
 		};
 		imageCalculator("AND create", "0","1");
 		imageCalculator("AND create", "Result of 0","2");
-		for (i=0;i<3;i++){
-		  selectWindow(""+i);
+		for (k=0;k<3;k++){
+		  selectWindow(""+k);
 		  close();
 		};
 		selectWindow("Result of 0");
